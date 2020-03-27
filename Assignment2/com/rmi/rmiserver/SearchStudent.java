@@ -4,6 +4,8 @@ import java.rmi.server.*;
 import java.rmi.RemoteException;
 import java.util.*;
 import com.rmi.rmiinterface.RMIInterface;
+import com.rmi.rmiserver.Student;
+import com.rmi.rmiinterface.IStudent;
 
 public class SearchStudent extends UnicastRemoteObject 
                          implements RMIInterface 
@@ -12,35 +14,34 @@ public class SearchStudent extends UnicastRemoteObject
     { 
         super(); 
         // declare a list of student information
-        listStudent.put("16020111","Nguyen Van A, 16020111, K61CB");
-        listStudent.put("16020112","Nguyen Van B, 16020112, K61CD");
-        listStudent.put("17020111","Nguyen Tan B, 17020111, K61CCLC");
-        listStudent.put("18020112","Nguyen Thi C, 18020112, K61CA");
+        listStudent.put("16020111", new Student("Nguyen Van A", "16020111", "K61CB", "Ha Noi"));
+        listStudent.put("16020112", new Student("Nguyen A B", "16020112", "K61CA", "HCM"));
+        listStudent.put("17020111", new Student("Nguyen B C", "17020111", "K62T", "Da Nang"));
+        listStudent.put("18020112", new Student("Nguyen C D", "18020112", "K63N", "Nha Trang"));
     } 
     
-    static Map<String, String> listStudent = new HashMap<String, String>();
+    static Map<String, IStudent> listStudent = new HashMap<String, IStudent>();
 
     //implementation of interface method
-    public String getStudentInfor(String studentCode) 
+    public IStudent getStudentInfor(String studentCode) 
                        throws RemoteException 
-    {
-        String result; 
+    { 
         if (SearchStudent.isStudentCode(studentCode)) 
             if (listStudent.containsKey(studentCode) == true)
             {
+                System.out.print("Name: " + listStudent.get(studentCode).getName()); 
                 return listStudent.get(studentCode);
             }
             else
             {   
                 // when studentCode not in database
-                return "Not Found";
+                return new Student("Not Found");
             }
         else
         {
             // when studentCode is not double
-            result = "Invalid studentCode format";
+            return new Student("Not Found");
         }
-        return result; 
     } 
     
     private static boolean isStudentCode(String studentCode)
