@@ -1,0 +1,10 @@
+.vscode
+.idea
+Music
+venv
+*.pyc
+rabbit/
+*/.idea
+*/.vscode
+__pycache__
+*/__pycache__
