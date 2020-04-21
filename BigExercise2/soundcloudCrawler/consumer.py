@@ -13,6 +13,13 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 def consume():
+    if 'AMQP_HOST' in os.environ:
+        host = os.environ['AMQP_HOST']
+    else:
+        host = 'localhost'
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host=host, heartbeat=600, blocked_connection_timeout=3000))
+    channel = connection.channel()
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host='localhost', heartbeat=600, blocked_connection_timeout=3000))
     channel = connection.channel()

@@ -1,11 +1,16 @@
 # TOOL CRAWL AND DOWNLOAD MUSIC FROM ZINGMP3, SOUNDCLOUD
 
-## Run without docker 
+## How to run
 
 Download rabbitmq:
 
 ```sh
 $ sudo apt install rabbitmq-server
+```
+Install lib:
+
+```sh
+$ pip install -r requirements.txt
 ```
 
 Start zingmp3Crawler

@@ -4,7 +4,7 @@ import time
 from main import downloadMusic
 import multiprocessing
 
-
+print("running zingmp3 consumer")
 def callback(ch, method, properties, body):
     url =  body.decode('utf8')
     print(" [x] Received %r" % url)
@@ -13,10 +13,13 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 def consume():
+    if 'AMQP_HOST' in os.environ:
+        host = os.environ['AMQP_HOST']
+    else:
+        host = 'localhost'
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost', heartbeat=600, blocked_connection_timeout=3000))
+        pika.ConnectionParameters(host=host, heartbeat=600, blocked_connection_timeout=3000))
     channel = connection.channel()
-
     channel.exchange_declare(exchange='music', exchange_type='direct', durable=False, auto_delete=False)
     result = channel.queue_declare(queue='soundcloud_queue', durable=False, exclusive=False, auto_delete=False)
     queue_name = result.method.queue

@@ -33,7 +33,7 @@ class authentication():
         info = res.json()
         name = try_get(info, lambda x: x.get('data').get('info').get('name'))
         if not name:
-            sys.stdout.write(
+            print(
                 fc + sd + "\n[" + fr + sb + "-" + fc + sd + "] : " + fr + sd + "Cookies die, pls try again.\n")
             sys.exit(0)
         return True
@@ -100,7 +100,7 @@ class Zingmp3_vn(ProgressBar):
                 return re.sub(r'w[0-9]+', 'w1080', url)
 
         if self._show_json_info:
-            sys.stdout.write(json.dumps(info, indent=4, ensure_ascii=False))
+            print(json.dumps(info, indent=4, ensure_ascii=False))
             return
 
         if info.get('msg') == 'Success':
@@ -112,12 +112,14 @@ class Zingmp3_vn(ProgressBar):
             try:
                 self.start_download(streaming=streaming, _type=_type, title=title, lyric=lyric)
             except:
+                if not os.path.exists(self._path_save):
+                    os.mkdir(self._path_save)
                 link_file = os.path.join(self._path_save, 'ERROR')
                 if not os.path.exists(link_file):
                     os.mkdir(link_file)
                 with open(os.path.join(link_file, 'errors.txt'), 'a') as f:
-                    print('Error', api)
-                    f.write(api + '\n')
+                    f.write(self._url + '\n')
+                print('Error', self._url)
         else:
             to_screen("Error can not find media data.")
 
@@ -215,7 +217,7 @@ class Zingmp3_vn(ProgressBar):
                     to_screen("Download lyric .... DONE.")
                 else:
                     to_screen("This media don't have lyric.")
-        sys.stdout.write("\n\n")
+        print("\n\n")
 
     def get_api_with_signature(self, name_api, video_id='', alias='', _type='', new_release=False):
         """
@@ -533,9 +535,9 @@ def main(argv):
         auth = authentication(path_cookies=args.path_cookie)
         status_auth = auth.auth_with_cookies()
         if status_auth:
-            sys.stdout.write(fg + '[' + fc + '*' + fg + '] : Login oke.\n')
+            print(fg + '[' + fc + '*' + fg + '] : Login oke.\n')
         else:
-            sys.stdout.write(fg + '[' + fc + '*' + fg + '] : Login false.\n')
+            print(fg + '[' + fc + '*' + fg + '] : Login false.\n')
     Base(
         url=args.url,
         path_save=args.path_save,
@@ -553,6 +555,6 @@ if __name__ == '__main__':
             argv = sys.stdin.read().split(' ')
             main(argv)
     except KeyboardInterrupt:
-        sys.stdout.write(
+        print(
             fc + sd + "\n[" + fr + sb + "-" + fc + sd + "] : " + fr + sd + "User Interrupted..\n")
         sys.exit(0)

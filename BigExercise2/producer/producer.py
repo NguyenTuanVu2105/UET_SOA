@@ -2,10 +2,15 @@ import pika
 import sys
 import os
 import time
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+
+if 'AMQP_HOST' in os.environ:
+   host = os.environ['AMQP_HOST']
+else:
+   host = 'localhost'
+connection = pika.BlockingConnection(pika.ConnectionParameters(host))
 channel = connection.channel()
 
-channel.exchange_declare(exchange='direct_music', exchange_type='direct')
+channel.exchange_declare(exchange='music', exchange_type='direct')
 
 file_song = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'playlist.txt')
 with open(file_song, 'r') as f:
@@ -24,3 +29,4 @@ with open(file_song, 'r') as f:
                            ))
       print(" [x] Sent %r:%r" %  (routing_key, song.strip()))
 connection.close()
+
