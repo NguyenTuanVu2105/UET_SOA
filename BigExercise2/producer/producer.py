@@ -12,7 +12,7 @@ channel = connection.channel()
 
 channel.exchange_declare(exchange='music', exchange_type='direct')
 
-file_song = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'playlist.txt')
+file_song = os.path.join(os.path.dirname(os.path.abspath(__file__)).replace('/producer', ''), 'playlists.txt')
 with open(file_song, 'r') as f:
    songs = f.readlines()
    for song in songs: 
